@@ -1,0 +1,75 @@
+#mucis app
+from tkinter import*
+from tkinter import ttk, filedialog
+from pygame import mixer
+import os
+parent=Tk()
+parent.geometry('900x700+300+50')
+
+parent.title("Music Player")
+
+imgicon=PhotoImage(file='logo.png')
+parent.iconphoto(False,imgicon)
+
+parent.configure(bg='gray')
+parent.resizable(False,False)
+
+tx=Label(parent,text="CREATED MY NITIN SHARMA",bg='gray',font=('Fixedsys',20,'bold'))
+tx.place(x=300,y=20)
+
+mixer.init()
+
+def open_folder():
+    path=filedialog.askdirectory()
+    if path:
+        os.chdir(path)
+        songs=os.listdir(path)
+        # print(songs)
+        for song in songs:
+            if song.endswith('.mp3'):
+                playlist.insert(END,song)
+                
+                
+def play_song():
+    music_name=playlist.get(ACTIVE)
+    print(music_name[0:-4])
+    mixer.music.load(playlist.get(ACTIVE))
+    mixer.music.play()     
+    music.config(text='music_name[0:-4]')   
+    
+    
+
+logo=PhotoImage(file='logo.png')
+Label(parent,image=logo,bg='gray').place(x=600,y=200)
+
+play=PhotoImage(file='play.png')
+Button(parent,image=play,bg='gray',bd=0,activebackground='gray',command=play_song).place(x=645,y=420)
+
+pause=PhotoImage(file='pause.png')
+Button(parent,image=pause,bg='gray',bd=0,activebackground='gray',command=mixer.music.pause).place(x=550,y=440)
+
+resume=PhotoImage(file='resume.png')
+Button(parent,image=resume,bg='gray',bd=0,activebackground='gray',command=mixer.music.unpause).place(x=765,y=440)
+
+stop=PhotoImage(file='stop.png')
+Button(parent,image=stop,bg='gray',bd='0',activebackground='gray',command=mixer.music.stop).place(x=663,y=540)
+
+
+
+musicframe=Frame(parent,bd=5,relief=RIDGE,bg='silver')
+musicframe.place(x=50,y=100,width=300,height=550)
+Button(parent,text='Open Folder',width=17,height=2,bd=5,bg='teal',activebackground='grey',command=open_folder).place(x=135,y=50)
+
+
+scroll=Scrollbar(musicframe)
+playlist=Listbox(musicframe,width=100,font=('arial',10),bg='#333333',fg='gray',selectbackground='lightblue',
+                 cursor='hand2',bd=0,yscrollcommand=scroll.set)
+
+scroll.config(command=playlist.yview)
+scroll.pack(side=RIGHT,fill=Y)
+playlist.pack(side=LEFT,fill=BOTH)
+
+music=Label(parent,text='',font=('arial',15),fg='white',bg='gray')
+music.place(x=690,y=100,anchor='center')
+
+parent.mainloop()
